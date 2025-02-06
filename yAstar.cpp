@@ -38,7 +38,9 @@ inline float distanceFromLine(float l0x,float l0y,float l1x,float l1y,float x,fl
 std::vector<std::pair<float, float>> simplifyPathDP(std::vector<std::pair<float, float>>& path,int index0, int index1, float& threshold){
     // DP 简化路径
     if(index1-index0<=2){
-        return std::vector<std::pair<float, float>>(path.begin()+index0, path.begin()+index1);
+        std::vector<std::pair<float, float>> oppath;
+        oppath.emplace_back(path[index1]);
+        return oppath;
     }
     float maxDistance = 0;
     int maxIndex = index0;
@@ -57,7 +59,6 @@ std::vector<std::pair<float, float>> simplifyPathDP(std::vector<std::pair<float,
         return path0;
     }else{
         std::vector<std::pair<float, float>> oppath;
-        oppath.emplace_back(path[index0]);
         oppath.emplace_back(path[index1]);
         return oppath;
     }
@@ -66,7 +67,9 @@ std::vector<std::pair<float, float>> simplifyPathDP(std::vector<std::pair<float,
 std::vector<std::pair<float, float>> AStar::simplifyPath(std::vector<std::pair<float, float>>& path, float threshold){
     // DP 简化路径
     int index0=0, index1=path.size()-1;
-    return simplifyPathDP(path, index0, index1, threshold);
+    auto noStart = simplifyPathDP(path, index0, index1, threshold);
+    noStart.insert(noStart.begin(), path.front());
+    return noStart;
 }
 
 
