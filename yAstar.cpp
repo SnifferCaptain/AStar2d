@@ -72,7 +72,32 @@ std::vector<std::pair<float, float>> AStar::simplifyPath(std::vector<std::pair<f
     return noStart;
 }
 
-
+std::vector<std::pair<int, int>> AStar::densifyPath(std::vector<std::pair<float, float>>& _path, float mapping){
+    std::vector<std::pair<int, int>> path;
+    // Bresenham算法
+    for(int a=0;a<_path.size()-1;a++){
+        int x0 = _path[a].first/mapping, y0 = _path[a].second/mapping;
+        int x1 = _path[a+1].first/mapping, y1 = _path[a+1].second/mapping;
+        int dx = std::abs(x1-x0), dy = std::abs(y1-y0);
+        int sx = x0<x1?1:-1, sy = y0<y1?1:-1;
+        int err = dx-dy;
+        while(true){
+            if(x0==x1 && y0==y1)break;
+            path.emplace_back(x0, y0);
+            int e2 = 2*err;
+            if(e2>-dy){
+                err-=dy;
+                x0+=sx;
+            }
+            if(e2<dx){
+                err+=dx;
+                y0+=sy;
+            }
+        }
+    }
+    path.emplace_back(_path.back().first/mapping, _path.back().second/mapping);
+    return path;
+}
 
 float AStar::getLength(std::vector<std::pair<float, float>>& _path) const {
     return std::transform_reduce(std::execution::par_unseq, _path.begin(), _path.end()-1,_path.begin()+1,0.f,std::plus<>(),[](auto& a, auto& b){
