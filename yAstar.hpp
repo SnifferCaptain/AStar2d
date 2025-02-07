@@ -71,8 +71,13 @@ public:
     // @param threshold 阈值，小于该值的点会被删除，单位可以为米，与传入路径的scale相同。
     std::vector<std::pair<float, float>> simplifyPath(std::vector<std::pair<float, float>>& _path, float threshold=0.1f);
 
+    // @brief 将压缩的路径转化为稠密点
+    // @param _path 压缩的路径
+    // @param mapping 映射比例，数值为每个像素代表多少米
+    std::vector<std::pair<int, int>> densifyPath(std::vector<std::pair<float, float>>& _path, float mapping);
+
     // @brief 压缩路径，按照距离间隔压缩。
-    std::vector<std::pair<float, float>> chunkPath(std::vector<std::pair<float, float>>& _path, float threshold=0.1f);
+    // std::vector<std::pair<float, float>> chunkPath(std::vector<std::pair<float, float>>& _path, float threshold=0.1f);
 
     // @brief 获取路径长度
     // @param _path 路径
